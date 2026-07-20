@@ -1,3 +1,3 @@
 # mdtohtml_forMacOS
 
-mdtohtml.sh some-test-whatever.md
+./mdtohtml.sh some-test-whatever.md
