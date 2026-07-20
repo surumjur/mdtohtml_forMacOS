@@ -29,7 +29,6 @@ if "%OVERRIDE_BIBFILE%"=="" set OVERRIDE_BIBFILE=%_TEMPLATES%\local_override.bib
 if "%EXT_BIBFILE%"=="" set EXT_BIBFILE=%_TEMPLATES%\external.bib
 "%_PYTHON%" "%_MDTOHTML%" %1 ^
 	-t "%_TEMPLATES%\tieto_templates\main.template.html" "%_DOC%.html" ^
-	-p logo "file:///%_TEMPLATES_SLASH%/tieto_templates/tieto_logo_blue.svg" ^
 	-p filename "%_DOC%.pdf" ^
 	-p cssroot "file:///%_TEMPLATES_SLASH%" ^
 	-t "%_TEMPLATES%\tieto_templates\header.template.html" "%_DOC%.header.html" ^

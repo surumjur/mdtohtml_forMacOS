@@ -30,7 +30,6 @@ export EXT_BIBFILE="${EXT_BIBFILE:-$TEMPLATES_DIR/external.bib}"
 
 python3 "$MDTOHTML_PY" "$INPUT_FILE" \
   -t "$TEMPLATES_DIR/tieto_templates/main.template.html" "$DOC_NAME.html" \
-  -p logo "file:///$TEMPLATES_SLASH/tieto_templates/tieto_logo_blue.svg" \
   -p filename "$DOC_NAME.pdf" \
   -p cssroot "file:///$TEMPLATES_SLASH" \
   -t "$TEMPLATES_DIR/tieto_templates/header.template.html" "$DOC_NAME.header.html" \
