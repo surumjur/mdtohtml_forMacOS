@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Eurobank Installment Migration Script</title>
+    <link rel="stylesheet" href="file:////Users/juris.kristaps.surums/Documents/mdtohtml/cs.ext.md_bundle/css/site.css">
+    <link rel="stylesheet" href="file:////Users/juris.kristaps.surums/Documents/mdtohtml/cs.ext.md_bundle/css/fonts.css">
+    <link rel="stylesheet" href="file:////Users/juris.kristaps.surums/Documents/mdtohtml/cs.ext.md_bundle/css/icons.css">
+</head>
+<body>
+<p class="heading">Disclaimer and notices</p>
+<p>While every attempt has been made to ensure that the information in this
+document is accurate and complete, some typographical errors or
+technical inaccuracies may exist. <strong><em>Tietoevry</em></strong> does not accept responsibility
+for any kind of loss resulting from the use of information contained in this document.</p>
+<p class="pagebreakafter">The information contained in this document is subject to change without notice.</p>
+<h1 id="introduction">Introduction</h1>
+<p>This document describes the purpose, input requirements, and business logic of the
+<code>migrate_eb_installments.py</code> migration script used for <strong><em>Eurobank</em></strong> installment plan migration.</p>
+<h1 id="purpose">Purpose</h1>
+<p>The script migrates installment plans from a CSV file into <strong><em>Card Suite</em></strong>, creating the necessary
+agreements and posting installment entries according to account-level configuration.</p>
+<h1 id="input-file-columns">Input File Columns</h1>
+<p>The input CSV file must contain the following columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>accountAgreementId</code></td>
+<td>The unique identifier for the account agreement to migrate.</td>
+</tr>
+<tr>
+<td><code>installmentAmount</code></td>
+<td>The total amount to be split into installments.</td>
+</tr>
+<tr>
+<td><code>numofInstallments</code></td>
+<td>The number of installments for the plan – the rest of the installments.</td>
+</tr>
+<tr>
+<td><code>lastInstallment</code></td>
+<td>The final installment amount because it is different from others.</td>
+</tr>
+<tr>
+<td><code>merchantName</code></td>
+<td>The name of the merchant.</td>
+</tr>
+</tbody>
+</table>
+<p>The script will fail if any of these columns are missing.</p>
+<h1 id="due-date-and-billing-date-logic">Due Date and Billing Date Logic</h1>
+<p>For each account agreement, the script retrieves 3 key values from the database:</p>
+<p><strong>Business Date:</strong> Current business date of the system.</p>
+<p><strong>Billing Date:</strong> The minimum value date from the account's CALA (Account Settlement Date Control)
+book account.</p>
+<p><strong>Due Day:</strong> The due day is fetched from the account's effective conditions (condition index 102).
+The due date is then constructed using the billing date — billing date + due days.</p>
+<p>In case when next due date &lt; next billing date, it is handled with <code>MIGR-SPEN-ACCNT-INSTP</code> event,
+using <code>ANTRY_AMNT4</code> - amount debited in previous period/billing cycle (the billed (invoiced) part),
+value date is current period end.</p>
+<h1 id="error-handling">Error Handling</h1>
+<p>The script checks that the installment amount is evenly divisible by the number of installments. This takes into consideration the final installment.
+If not, the amount is rounded up from remainder if it is equal or higher to 5.</p>
+<p><strong>Example:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>installmentAmount</code></td>
+<td>1000.00</td>
+</tr>
+<tr>
+<td><code>numofInstallments</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>lastInstallment</code></td>
+<td>333.34</td>
+</tr>
+</tbody>
+</table>
+<p>Last installment (provided) = <strong>333.34</strong>
+Regular installment = (1000.00 - 333.34) / (numofInstallments - 1) = <strong>333.33</strong>
+Total = 333.33 × (numofInstallments - 1) + 333.34 = <strong>1000.00</strong></p>
+<p>The <code>lastInstallment</code> is part of <code>installmentAmount</code> — it is simply the final installment
+that absorbs any rounding difference.</p>
+<p>Any failed rows are logged and written to a separate file for review.</p>
+<h1 id="logging-and-progress">Logging and Progress</h1>
+<p>The script logs all actions and errors to a log file.
+Progress is displayed in the console during migration.</p>
+<p class="heading revision-history">Revision history</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Chapter</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0.0</td>
+<td>2026-07-17</td>
+<td>All</td>
+<td>Initial version</td>
+</tr>
+<tr>
+<td>1.0.1</td>
+<td>2026-07-17</td>
+<td>Input Columns,</td>
+<td>Added <code>lastInstallment</code> field</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Error Handling</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

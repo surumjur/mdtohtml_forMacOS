@@ -1,0 +1,23 @@
+#!/bin/bash
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as sudo uninstall-wkhtmltox" 1>&2
+   exit 1
+fi
+cd /usr/local
+if which pkgutil >/dev/null; then
+    pkgutil --forget org.wkhtmltopdf.wkhtmltox
+fi
+echo REMOVE /usr/local/bin/wkhtmltopdf && rm -f bin/wkhtmltopdf
+echo REMOVE /usr/local/bin/wkhtmltoimage && rm -f bin/wkhtmltoimage
+echo REMOVE /usr/local/include/wkhtmltox/dllend.inc && rm -f include/wkhtmltox/dllend.inc
+echo REMOVE /usr/local/include/wkhtmltox/dllbegin.inc && rm -f include/wkhtmltox/dllbegin.inc
+echo REMOVE /usr/local/include/wkhtmltox/image.h && rm -f include/wkhtmltox/image.h
+echo REMOVE /usr/local/include/wkhtmltox/pdf.h && rm -f include/wkhtmltox/pdf.h
+echo REMOVE /usr/local/lib/libwkhtmltox.0.dylib && rm -f lib/libwkhtmltox.0.dylib
+echo REMOVE /usr/local/lib/libwkhtmltox.dylib && rm -f lib/libwkhtmltox.dylib
+echo REMOVE /usr/local/lib/libwkhtmltox.0.12.6.dylib && rm -f lib/libwkhtmltox.0.12.6.dylib
+echo REMOVE /usr/local/lib/libwkhtmltox.0.12.dylib && rm -f lib/libwkhtmltox.0.12.dylib
+echo REMOVE /usr/local/share/man/man1/wkhtmltoimage.1.gz && rm -f share/man/man1/wkhtmltoimage.1.gz
+echo REMOVE /usr/local/share/man/man1/wkhtmltopdf.1.gz && rm -f share/man/man1/wkhtmltopdf.1.gz
+echo REMOVE /usr/local/include/wkhtmltox && rm -df /usr/local/include/wkhtmltox
+echo REMOVE /usr/local/bin/uninstall-wkhtmltox && rm -f /usr/local/bin/uninstall-wkhtmltox

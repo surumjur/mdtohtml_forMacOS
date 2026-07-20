@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<pkg-info format-version="2" identifier="org.wkhtmltopdf.wkhtmltox" version="0.12.6-2.macos-cocoa" generator-version="InstallCmds-720 (19F101)" auth="root">
+    <payload numberOfFiles="7" installKBytes="50105"/>
+    <bundle-version/>
+    <upgrade-bundle/>
+    <update-bundle/>
+    <atomic-update-bundle/>
+    <strict-identifier/>
+    <relocate/>
+    <scripts>
+        <postinstall file="./postinstall"/>
+    </scripts>
+</pkg-info>
